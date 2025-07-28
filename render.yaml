@@ -9,4 +9,4 @@ services:
     autoDeploy: true
     envVars:
       - key: BOT_TOKEN
-        value: твой_токен
+        value: 8389074990:AAHz7e6KaZRbrPSswz6L2GQObo9c3PudVIc
