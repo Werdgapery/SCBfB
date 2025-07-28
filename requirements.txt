@@ -2,3 +2,4 @@ Flask==2.3.*
 requests==2.31.*
 aiogram==3.*
 python-dotenv
+gunicorn
