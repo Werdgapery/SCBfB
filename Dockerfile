@@ -1,27 +1,37 @@
-# Используем Python 3.11 с минимальной базой
+# Используем официальный Python-образ
 FROM python:3.11-slim
 
-# Установим нужные пакеты, включая Rust (cargo)
+# Устанавливаем системные зависимости
 RUN apt-get update && apt-get install -y \
-    gcc \
+    build-essential \
     curl \
     libffi-dev \
     libssl-dev \
-    build-essential \
-    cargo \
     && rm -rf /var/lib/apt/lists/*
 
-    ENV CARGO_HOME=/tmp/cargo
+# Устанавливаем Rust, если вдруг понадобится для dev (но не используем в прод)
+# RUN curl https://sh.rustup.rs -sSf | sh -s -- -y
 
-# Установим pip-зависимости
+# Создаём директорию приложения
 WORKDIR /app
-COPY requirements.txt .
-RUN pip install --upgrade pip && \
-    pip install --only-binary :all: --upgrade pydantic-core pydantic
-RUN pip install -r requirements.txt
 
-# Копируем весь проект
+# Копируем requirements
+COPY requirements.txt .
+
+# Обновляем pip и заранее ставим только бинарные версии pydantic и pydantic-core
+RUN pip install --upgrade pip \
+ && pip install --only-binary :all: \
+    "pydantic==2.5.3" \
+    "pydantic-core==2.14.6"
+
+# Устанавливаем зависимости проекта
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Копируем весь код проекта
 COPY . .
 
-# Команда запуска сервера
-CMD ["gunicorn", "app:app", "--bind", "0.0.0.0:8000"]
+# Указываем порт, если нужно (Render сам пробрасывает PORT)
+EXPOSE 10000
+
+# Команда запуска
+CMD ["gunicorn", "-w", "2", "-b", "0.0.0.0:10000", "main:app"]
