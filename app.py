@@ -5,6 +5,7 @@ from aiogram import Bot, Dispatcher, types
 import asyncio
 import random
 import string
+from bot import bot, dp
 
 CLIENT_ID = os.getenv("CLIENT_ID")
 CLIENT_SECRET = os.getenv("CLIENT_SECRET")
