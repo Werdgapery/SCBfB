@@ -1,7 +1,7 @@
 import os
 from flask import Flask, request, redirect
 import requests
-from aiogram import Bot, Dispatcher, types
+from aiogram import Bot, Dispatcher
 import asyncio
 import random
 import string
@@ -14,10 +14,13 @@ BOT_TOKEN = os.getenv("BOT_TOKEN")
 app = Flask(__name__)
 
 # Telegram bot setup
-bot = Bot(token=BOT_TOKEN)
-dp = Dispatcher(bot)
+bot = Bot(token=os.getenv("BOT_TOKEN"))
+dp = Dispatcher()
 
 user_states = {}
+
+async def run_bot():
+    await dp.start_polling(bot)
 
 @dp.message(commands=['start'])
 async def start_cmd(event: types.Message):
