@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: stalcraft-bot-api
+    env: docker
+    plan: free
+    region: frankfurt
+    dockerfilePath: ./Dockerfile
+    branch: main
+    autoDeploy: true
+    envVars:
+      - key: BOT_TOKEN
+        value: твой_токен

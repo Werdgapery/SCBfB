@@ -1,27 +1,24 @@
-# Используем официальный образ Python с Rust
+# Используем Python 3.11 с минимальной базой
 FROM python:3.11-slim
 
-# Установим system deps
+# Установим нужные пакеты, включая Rust (cargo)
 RUN apt-get update && apt-get install -y \
     gcc \
-    cargo \
+    curl \
     libffi-dev \
     libssl-dev \
     build-essential \
+    cargo \
     && rm -rf /var/lib/apt/lists/*
 
-# Создаём рабочую директорию
+# Установим pip-зависимости
 WORKDIR /app
-
-# Копируем зависимости
 COPY requirements.txt .
-
-# Устанавливаем зависимости
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 
 # Копируем весь проект
 COPY . .
 
-# Указываем команду запуска
+# Команда запуска сервера
 CMD ["gunicorn", "app:app", "--bind", "0.0.0.0:8000"]
