@@ -16,8 +16,9 @@ RUN apt-get update && apt-get install -y \
 # Установим pip-зависимости
 WORKDIR /app
 COPY requirements.txt .
-RUN pip install --upgrade pip
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --upgrade pip && \
+    pip install --only-binary :all: --upgrade pydantic-core pydantic
+RUN pip install -r requirements.txt
 
 # Копируем весь проект
 COPY . .
