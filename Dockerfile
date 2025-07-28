@@ -11,11 +11,13 @@ RUN apt-get update && apt-get install -y \
     cargo \
     && rm -rf /var/lib/apt/lists/*
 
+    ENV CARGO_HOME=/tmp/cargo
+
 # Установим pip-зависимости
 WORKDIR /app
 COPY requirements.txt .
 RUN pip install --upgrade pip
-RUN pip install -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Копируем весь проект
 COPY . .
